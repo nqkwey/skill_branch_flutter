@@ -41,3 +41,6 @@ flutter:
    - family: AppIcons
      fonts:
        - asset: assets/fonts/AppIcons.ttf
+
+  assets:
+    - assets/icons/
