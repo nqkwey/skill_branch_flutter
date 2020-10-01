@@ -6,14 +6,21 @@ import 'package:flutter/material.dart';
 
 import 'feed_screen.dart';
 
-class PhotoRoute extends StatefulWidget {
+class FullScreenImage extends StatefulWidget {
+  final String altDescription;
+  final String userName;
+  final String name;
+
+  FullScreenImage({Key key, this.altDescription, this.userName, this.name})
+      : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
-    return _PhotoRouteState();
+    return _FullScreenImageState();
   }
 }
 
-class _PhotoRouteState extends State {
+class _FullScreenImageState extends State<FullScreenImage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,14 +33,14 @@ class _PhotoRouteState extends State {
           ),
           backgroundColor: AppColors.white,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: AppColors.grayChateau),
+            icon: Icon(CupertinoIcons.back, color: AppColors.grayChateau),
             tooltip: 'Go back',
             onPressed: () => Navigator.pop(context),
           ),
         ),
         body: Column(
           children: <Widget>[
-            FullScreenImage(photoLink: kFlutterDash),
+            Photo(photoLink: kFlutterDash),
             Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -41,14 +48,34 @@ class _PhotoRouteState extends State {
                       horizontal: 10,
                       vertical: 5,
                     ),
-                    child: Description('This is Flutter dash. I hate it!'))),
+                    child: Text(widget.altDescription ?? kDescription,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppStyles.h3))),
             Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 5,
-              ),
-              child: UserInfo(),
-            ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                child: Row(
+                  children: <Widget>[
+                    UserAvatar(
+                        'https://cdn.jpegmini.com/user/images/slider_puffin_jpegmini_mobile.jpg'),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Text(widget.name ?? kName, style: AppStyles.h1Black),
+                        Text(widget.userName ?? kUserName,
+                            style: AppStyles.h5Black
+                                .copyWith(color: AppColors.manatee)),
+                      ],
+                    )
+                  ],
+                )),
             Buttons()
           ],
         ));
@@ -56,6 +83,11 @@ class _PhotoRouteState extends State {
 }
 
 class UserInfo extends StatelessWidget {
+  String userName = "";
+  String name = "";
+
+  UserInfo(this.name, this.userName);
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -69,8 +101,9 @@ class UserInfo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Name("Dianne Miles"),
-            Nickname("@diannemiles"),
+            Text(name, style: AppStyles.h1Black),
+            Text(userName,
+                style: AppStyles.h5Black.copyWith(color: AppColors.manatee)),
           ],
         )
       ],
@@ -79,36 +112,36 @@ class UserInfo extends StatelessWidget {
 }
 
 class Name extends Text {
-  String name;
+  String text;
 
-  Name(this.name) : super(name);
+  Name(this.text) : super(text);
 
   @override
   Widget build(BuildContext context) {
-    return Text(name, style: AppStyles.h1Black);
+    return Text(text, style: AppStyles.h1Black);
   }
 }
 
 class Nickname extends Text {
-  String userName;
+  String text;
 
-  Nickname(this.userName) : super(userName);
+  Nickname(this.text) : super(text);
 
   @override
   Widget build(BuildContext context) {
-    return Text(userName,
+    return Text(text,
         style: AppStyles.h5Black.copyWith(color: AppColors.manatee));
   }
 }
 
 class Description extends Text {
-  String altDescription;
+  String text;
 
-  Description(this.altDescription) : super(altDescription);
+  Description(this.text) : super(text);
 
   @override
   Widget build(BuildContext context) {
-    return Text(altDescription,
+    return Text(text,
         maxLines: 3, overflow: TextOverflow.ellipsis, style: AppStyles.h3);
   }
 }
@@ -123,8 +156,7 @@ class Buttons extends StatelessWidget {
         children: <Widget>[
           LikeButton(10, true),
           GestureDetector(
-              onTap: () {},
-              child: Button('Save', EdgeInsets.all(12))),
+              onTap: () {}, child: Button('Save', EdgeInsets.all(12))),
           GestureDetector(
               onTap: () {},
               child: Button('Visit', EdgeInsets.only(top: 12, bottom: 12)))

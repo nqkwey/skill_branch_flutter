@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class FullScreenImage extends StatelessWidget {
-  FullScreenImage({Key key, this.photoLink}) : super(key: key);
+class Photo extends StatelessWidget {
+  Photo({Key key, this.photoLink}) : super(key: key);
 
   final String photoLink;
 

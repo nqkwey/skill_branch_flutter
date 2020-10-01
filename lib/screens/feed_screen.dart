@@ -7,6 +7,10 @@ import 'package:flutter/material.dart';
 const String kFlutterDash = "https://flutter"
     ".dev/assets/404/dash_nest-c64796b59b65042a2b40fae5764c13b7477a592db79eaf04c86298dcb75b78ea.png";
 
+const String kDescription = 'This is Flutter dash. I hate it!';
+const String kName = 'Dianne Miles';
+const String kUserName = '@diannemiles';
+
 class FeedRoute extends StatefulWidget {
   FeedRoute({Key key}) : super(key: key);
 
@@ -26,7 +30,12 @@ class _FeedRouteState extends State<FeedRoute> {
             return InkWell(
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PhotoRoute()),
+                MaterialPageRoute(
+                    builder: (context) => FullScreenImage(
+                          altDescription: kDescription,
+                          userName: kUserName,
+                          name: kUserName,
+                        )),
               ),
               child: Column(children: <Widget>[
                 _buildItem(),
@@ -44,15 +53,14 @@ class _FeedRouteState extends State<FeedRoute> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        FullScreenImage(photoLink: kFlutterDash),
+        Photo(photoLink: kFlutterDash),
         _buildPhotoMeta(),
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 5,
-          ),
-          child: Description('This is Flutter dash. I hate it!')
-        )
+            padding: EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 5,
+            ),
+            child: Description(kDescription))
       ],
     );
   }
@@ -74,8 +82,8 @@ class _FeedRouteState extends State<FeedRoute> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Name("Dianne Miles"),
-                  Nickname("@diannemiles"),
+                  Name(kName),
+                  Nickname(kUserName),
                 ],
               )
             ],
