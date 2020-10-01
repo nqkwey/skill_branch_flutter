@@ -37,7 +37,7 @@ class _FullScreenImageState extends State<FullScreenImage> {
           ),
           backgroundColor: AppColors.white,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: AppColors.grayChateau),
+            icon: Icon(CupertinoIcons.back, color: AppColors.grayChateau),
             tooltip: 'Go back',
             onPressed: () => Navigator.pop(context),
           ),
