@@ -23,7 +23,7 @@ class FullScreenImage extends StatefulWidget {
 class _FullScreenImageState extends State<FullScreenImage> {
   @override
   Widget build(BuildContext context) {
-    String userName = widget.userName ?? "";
+    String userName = widget.userName ?? kUserName;
     if (!userName.startsWith("@")) {
       userName = "@" + widget.userName;
     }

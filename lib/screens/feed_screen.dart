@@ -34,7 +34,7 @@ class _FeedRouteState extends State<FeedRoute> {
                     builder: (context) => FullScreenImage(
                           altDescription: kDescription,
                           userName: kUserName,
-                          name: kUserName,
+                          name: kName,
                         )),
               ),
               child: Column(children: <Widget>[
