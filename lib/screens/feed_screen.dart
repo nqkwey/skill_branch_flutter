@@ -44,7 +44,7 @@ class _FeedRouteState extends State<FeedRoute> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Photo(photoUrl: kFlutterDash),
+        FullScreenImage(photoLink: kFlutterDash),
         _buildPhotoMeta(),
         Padding(
           padding: EdgeInsets.symmetric(

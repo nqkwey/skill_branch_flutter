@@ -33,7 +33,7 @@ class _PhotoRouteState extends State {
         ),
         body: Column(
           children: <Widget>[
-            Photo(photoUrl: kFlutterDash),
+            FullScreenImage(photoLink: kFlutterDash),
             Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(

@@ -3,10 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class Photo extends StatelessWidget {
-  Photo({Key key, this.photoUrl}) : super(key: key);
+class FullScreenImage extends StatelessWidget {
+  FullScreenImage({Key key, this.photoLink}) : super(key: key);
 
-  final String photoUrl;
+  final String photoLink;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class Photo extends StatelessWidget {
         child: Container(
           color:AppColors.grayChateau,
           child: CachedNetworkImage(
-            imageUrl: photoUrl,
+            imageUrl: photoLink,
             placeholder: (context, url) =>
                 Center(child: CircularProgressIndicator()),
             errorWidget: (context, url, error) => Icon(Icons.error),
