@@ -23,6 +23,10 @@ class FullScreenImage extends StatefulWidget {
 class _FullScreenImageState extends State<FullScreenImage> {
   @override
   Widget build(BuildContext context) {
+    String userName = widget.userName ?? "";
+    if (!userName.startsWith("@")) {
+      userName = "@" + widget.userName;
+    }
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -33,7 +37,7 @@ class _FullScreenImageState extends State<FullScreenImage> {
           ),
           backgroundColor: AppColors.white,
           leading: IconButton(
-            icon: Icon(CupertinoIcons.back, color: AppColors.grayChateau),
+            icon: Icon(Icons.arrow_back_ios, color: AppColors.grayChateau),
             tooltip: 'Go back',
             onPressed: () => Navigator.pop(context),
           ),
@@ -69,9 +73,11 @@ class _FullScreenImageState extends State<FullScreenImage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Text(widget.name ?? kName, style: AppStyles.h1Black),
-                        Text(widget.userName ?? kUserName,
-                            style: AppStyles.h5Black
-                                .copyWith(color: AppColors.manatee)),
+                        Text(userName,
+                            style:
+                            AppStyles
+                                .h5Black.copyWith(color: AppColors
+                                .manatee)),
                       ],
                     )
                   ],
@@ -102,8 +108,8 @@ class UserInfo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Text(name, style: AppStyles.h1Black),
-            Text(userName,
-                style: AppStyles.h5Black.copyWith(color: AppColors.manatee)),
+            Text(userName, style: AppStyles.h5Black.copyWith(color: AppColors
+                .manatee)),
           ],
         )
       ],

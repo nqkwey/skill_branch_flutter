@@ -45,7 +45,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: FullScreenImage(
-          userName: '@kaparray',
+          userName: 'kaparray',
           key: Key('FullScreenImage'),
         ),
       ),
