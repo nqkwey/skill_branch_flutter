@@ -51,10 +51,7 @@ class _FeedRouteState extends State<FeedRoute> {
             horizontal: 10,
             vertical: 5,
           ),
-          child: Text('This is Flutter dash. I hate it!',
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: AppStyles.h3),
+          child: Description('This is Flutter dash. I hate it!')
         )
       ],
     );
@@ -77,13 +74,8 @@ class _FeedRouteState extends State<FeedRoute> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
-                    "Dianne Miles",
-                    style: AppStyles.h2Black,
-                  ),
-                  Text("@diannemiles",
-                      style:
-                          AppStyles.h5Black.copyWith(color: AppColors.manatee)),
+                  Name("Dianne Miles"),
+                  Nickname("@diannemiles"),
                 ],
               )
             ],
