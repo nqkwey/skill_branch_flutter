@@ -26,8 +26,8 @@ class _PhotoRouteState extends State {
           ),
           backgroundColor: AppColors.white,
           leading: IconButton(
-            icon: new Image.asset('assets/icons/backBtn.png'),
-            tooltip: 'Closes application',
+            icon: Icon(Icons.arrow_back_ios, color: AppColors.grayChateau),
+            tooltip: 'Go back',
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -123,7 +123,8 @@ class Buttons extends StatelessWidget {
         children: <Widget>[
           LikeButton(10, true),
           GestureDetector(
-              onTap: () {}, child: Button('Save', EdgeInsets.all(12))),
+              onTap: () {},
+              child: Button('Save', EdgeInsets.all(12))),
           GestureDetector(
               onTap: () {},
               child: Button('Visit', EdgeInsets.only(top: 12, bottom: 12)))
