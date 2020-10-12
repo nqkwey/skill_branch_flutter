@@ -10,6 +10,7 @@ const String kFlutterDash = "https://flutter"
 const String kDescription = 'This is Flutter dash. I hate it!';
 const String kName = 'Dianne Miles';
 const String kUserName = '@diannemiles';
+const String kUserPhoto = 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&w=500&q=80';
 
 class FeedRoute extends StatefulWidget {
   FeedRoute({Key key}) : super(key: key);
@@ -28,17 +29,22 @@ class _FeedRouteState extends State<FeedRoute> {
           itemCount: 5,
           itemBuilder: (BuildContext context, int index) {
             return InkWell(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => FullScreenImage(
-                          altDescription: kDescription,
-                          userName: kUserName,
-                          name: kName,
-                        )),
-              ),
+              onTap: () =>
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            FullScreenImage(
+                              photo: kFlutterDash,
+                              altDescription: kDescription,
+                              userName: kUserName,
+                              name: kName,
+                              userPhoto: kUserPhoto,
+                              heroTag: kFlutterDash + index.toString(),
+                            )),
+                  ),
               child: Column(children: <Widget>[
-                _buildItem(),
+                _buildItem(index),
                 Divider(
                   thickness: 2,
                   color: AppColors.mercury,
@@ -49,11 +55,13 @@ class _FeedRouteState extends State<FeedRoute> {
     );
   }
 
-  Widget _buildItem() {
+  Widget _buildItem(int index) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Photo(photoLink: kFlutterDash),
+        Hero(
+            tag: kFlutterDash + index.toString(),
+            child: Photo(photoLink: kFlutterDash)),
         _buildPhotoMeta(),
         Padding(
             padding: EdgeInsets.symmetric(
@@ -73,7 +81,7 @@ class _FeedRouteState extends State<FeedRoute> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              UserAvatar('https://cdn.jpegmini.com/user/images/slider_puffin_jpegmini_mobile.jpg'),
+              UserAvatar(kUserPhoto),
               SizedBox(
                 width: 6,
               ),

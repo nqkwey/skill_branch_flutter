@@ -54,7 +54,10 @@ class _FullScreenImageState extends State<FullScreenImage> {
         ),
         body: Column(
           children: <Widget>[
-            Photo(photoLink: widget.photo),
+            Hero(
+              tag: widget.heroTag,
+              child: Photo(photoLink: widget.photo),
+            ),
             Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
