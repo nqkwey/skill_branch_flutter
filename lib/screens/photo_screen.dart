@@ -10,9 +10,19 @@ class FullScreenImage extends StatefulWidget {
   final String altDescription;
   final String userName;
   final String name;
+  final String photo;
+  final String userPhoto;
+  final String heroTag;
 
-  FullScreenImage({Key key, this.altDescription, this.userName, this.name})
-      : super(key: key);
+  FullScreenImage({
+    Key key,
+    this.altDescription,
+    this.userName,
+    this.name,
+    this.photo,
+    this.userPhoto,
+    this.heroTag,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -44,7 +54,7 @@ class _FullScreenImageState extends State<FullScreenImage> {
         ),
         body: Column(
           children: <Widget>[
-            Photo(photoLink: kFlutterDash),
+            Photo(photoLink: widget.photo),
             Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -53,9 +63,7 @@ class _FullScreenImageState extends State<FullScreenImage> {
                       vertical: 5,
                     ),
                     child: Text(widget.altDescription ?? kDescription,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppStyles.h3))),
+                        maxLines: 3, overflow: TextOverflow.ellipsis, style: AppStyles.h3))),
             Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 10,
@@ -63,8 +71,7 @@ class _FullScreenImageState extends State<FullScreenImage> {
                 ),
                 child: Row(
                   children: <Widget>[
-                    UserAvatar(
-                        'https://cdn.jpegmini.com/user/images/slider_puffin_jpegmini_mobile.jpg'),
+                    UserAvatar(widget.userPhoto),
                     SizedBox(
                       width: 6,
                     ),
@@ -73,11 +80,7 @@ class _FullScreenImageState extends State<FullScreenImage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Text(widget.name ?? kName, style: AppStyles.h1Black),
-                        Text(userName,
-                            style:
-                            AppStyles
-                                .h5Black.copyWith(color: AppColors
-                                .manatee)),
+                        Text(userName, style: AppStyles.h5Black.copyWith(color: AppColors.manatee)),
                       ],
                     )
                   ],
@@ -85,70 +88,6 @@ class _FullScreenImageState extends State<FullScreenImage> {
             Buttons()
           ],
         ));
-  }
-}
-
-class UserInfo extends StatelessWidget {
-  String userName = "";
-  String name = "";
-
-  UserInfo(this.name, this.userName);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        UserAvatar(
-            'https://cdn.jpegmini.com/user/images/slider_puffin_jpegmini_mobile.jpg'),
-        SizedBox(
-          width: 6,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text(name, style: AppStyles.h1Black),
-            Text(userName, style: AppStyles.h5Black.copyWith(color: AppColors
-                .manatee)),
-          ],
-        )
-      ],
-    );
-  }
-}
-
-class Name extends Text {
-  String text;
-
-  Name(this.text) : super(text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text, style: AppStyles.h1Black);
-  }
-}
-
-class Nickname extends Text {
-  String text;
-
-  Nickname(this.text) : super(text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text,
-        style: AppStyles.h5Black.copyWith(color: AppColors.manatee));
-  }
-}
-
-class Description extends Text {
-  String text;
-
-  Description(this.text) : super(text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text,
-        maxLines: 3, overflow: TextOverflow.ellipsis, style: AppStyles.h3);
   }
 }
 
@@ -161,11 +100,8 @@ class Buttons extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           LikeButton(10, true),
-          GestureDetector(
-              onTap: () {}, child: Button('Save', EdgeInsets.all(12))),
-          GestureDetector(
-              onTap: () {},
-              child: Button('Visit', EdgeInsets.only(top: 12, bottom: 12)))
+          GestureDetector(onTap: () {}, child: Button('Save', EdgeInsets.all(12))),
+          GestureDetector(onTap: () {}, child: Button('Visit', EdgeInsets.only(top: 12, bottom: 12)))
         ],
       ),
     );
@@ -173,8 +109,8 @@ class Buttons extends StatelessWidget {
 }
 
 class Button extends Container {
-  String title;
-  EdgeInsets insets;
+  final String title;
+  final EdgeInsets insets;
 
   Button(this.title, this.insets);
 
@@ -184,9 +120,7 @@ class Button extends Container {
       margin: insets,
       width: 105,
       height: 36,
-      decoration: BoxDecoration(
-          color: AppColors.dodgerBlue,
-          borderRadius: BorderRadius.all(Radius.circular(7))),
+      decoration: BoxDecoration(color: AppColors.dodgerBlue, borderRadius: BorderRadius.all(Radius.circular(7))),
       child: Align(
           alignment: Alignment.center,
           child: Text(

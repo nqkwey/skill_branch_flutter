@@ -73,8 +73,7 @@ class _FeedRouteState extends State<FeedRoute> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              UserAvatar(
-                  'https://cdn.jpegmini.com/user/images/slider_puffin_jpegmini_mobile.jpg'),
+              UserAvatar('https://cdn.jpegmini.com/user/images/slider_puffin_jpegmini_mobile.jpg'),
               SizedBox(
                 width: 6,
               ),
@@ -92,5 +91,38 @@ class _FeedRouteState extends State<FeedRoute> {
         ],
       ),
     );
+  }
+}
+
+class Name extends Text {
+  final String text;
+
+  Name(this.text) : super(text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text, style: AppStyles.h1Black);
+  }
+}
+
+class Nickname extends Text {
+  final String text;
+
+  Nickname(this.text) : super(text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text, style: AppStyles.h5Black.copyWith(color: AppColors.manatee));
+  }
+}
+
+class Description extends Text {
+  final String text;
+
+  Description(this.text) : super(text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text, maxLines: 3, overflow: TextOverflow.ellipsis, style: AppStyles.h3);
   }
 }
