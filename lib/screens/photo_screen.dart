@@ -30,7 +30,43 @@ class FullScreenImage extends StatefulWidget {
   }
 }
 
-class _FullScreenImageState extends State<FullScreenImage> {
+class _FullScreenImageState extends State<FullScreenImage> with TickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> _avatarOpacity;
+  Animation<double> _userInfoOpacity;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    _avatarOpacity = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+        parent: _controller,
+        curve: Interval(
+          0.0,
+          0.5,
+          curve: Curves.ease,
+        )));
+
+    _userInfoOpacity = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+        parent: _controller,
+        curve: Interval(
+          0.5,
+          1.0,
+          curve: Curves.ease,
+        )));
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     String userName = widget.userName ?? kUserName;
@@ -74,18 +110,36 @@ class _FullScreenImageState extends State<FullScreenImage> {
                 ),
                 child: Row(
                   children: <Widget>[
-                    UserAvatar(widget.userPhoto),
+                    AnimatedBuilder(
+                      animation: _controller,
+                      child: UserAvatar(widget.userPhoto),
+                      builder: (context, child) => Container(
+                        child: Opacity(
+                          opacity: _avatarOpacity.value.toDouble(),
+                          child: child,
+                        ),
+                      ),
+                    ),
                     SizedBox(
                       width: 6,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Text(widget.name ?? kName, style: AppStyles.h1Black),
-                        Text(userName, style: AppStyles.h5Black.copyWith(color: AppColors.manatee)),
-                      ],
-                    )
+                    AnimatedBuilder(
+                      animation: _controller,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text(widget.name ?? kName, style: AppStyles.h1Black),
+                          Text(userName, style: AppStyles.h5Black.copyWith(color: AppColors.manatee)),
+                        ],
+                      ),
+                      builder: (context, child) => Container(
+                        child: Opacity(
+                          opacity: _userInfoOpacity.value.toDouble(),
+                          child: child,
+                        ),
+                      ),
+                    ),
                   ],
                 )),
             Buttons()
