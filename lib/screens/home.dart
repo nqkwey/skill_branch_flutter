@@ -1,10 +1,17 @@
+import 'dart:async';
+
 import 'package:FlutterGalleryApp/main.dart';
 import 'package:FlutterGalleryApp/res/colors.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/screens/feed_screen.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
+  final Stream<ConnectivityResult> onConnectivityChanged;
+
+  Home(this.onConnectivityChanged);
+
   @override
   State<StatefulWidget> createState() {
     return _HomeState();
@@ -16,7 +23,9 @@ class _HomeState extends State<Home> {
   final PageStorageBucket pageStorageBucket = PageStorageBucket();
 
   List<Widget> pages = [
-    FeedRoute(key: PageStorageKey("FeedRoute"),),
+    FeedRoute(
+      key: PageStorageKey("FeedRoute"),
+    ),
     Container(),
     Container(),
   ];
@@ -42,6 +51,27 @@ class _HomeState extends State<Home> {
     ),
   ];
 
+  StreamSubscription subscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    subscription = widget.onConnectivityChanged.listen((ConnectivityResult result) {
+      switch (result) {
+        case ConnectivityResult.wifi:
+          ConnectivityOverlay().removeOverlay(context);
+          break;
+        case ConnectivityResult.mobile:
+          ConnectivityOverlay().removeOverlay(context);
+          break;
+        case ConnectivityResult.none:
+          ConnectivityOverlay().showOverlay(context, widget);
+          break;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +88,12 @@ class _HomeState extends State<Home> {
       ),
       body: pages[currentPosition],
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    subscription.cancel();
   }
 }
 

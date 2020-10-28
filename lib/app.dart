@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:FlutterGalleryApp/res/styles.dart';
 import 'package:FlutterGalleryApp/screens/home.dart';
 import 'package:FlutterGalleryApp/screens/photo_screen.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
         }
         return null;
       },
-      home: Home(),
+      home: Home(Connectivity().onConnectivityChanged),
     );
   }
 }
