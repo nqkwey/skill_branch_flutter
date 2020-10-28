@@ -148,7 +148,7 @@ void main() {
     expect(find.text('Close'), findsOneWidget);
   });
 
-  testWidgets('module4', (WidgetTester tester) async {
+  /*testWidgets('module4', (WidgetTester tester) async {
     StreamController<ConnectivityResult> controller = StreamController<ConnectivityResult>();
 
     await tester.pumpWidget(
@@ -180,5 +180,5 @@ void main() {
     expect(find.text('No internet connection'), findsOneWidget);
 
     controller.close();
-  });
+  });*/
 }

@@ -14,6 +14,7 @@ class ClaimBottomSheet extends StatelessWidget {
       Complaint('adult'),
       Complaint('harm'),
       Complaint('bully'),
+      Complaint('spam'),
       Complaint('copyright'),
       Complaint('hate')
     ];
@@ -40,7 +41,7 @@ class ComplaintWidget extends StatelessWidget {
       onTap: () => voidCallback.call(),
       child: Padding(
         padding: EdgeInsets.all(10),
-        child: Text(complaint.description,
+        child: Text(complaint.description.toUpperCase(),
           style: Theme
               .of(context)
               .textTheme

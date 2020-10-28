@@ -4,6 +4,7 @@ import 'package:FlutterGalleryApp/widgets/claim_bottom_sheet.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 import 'feed_screen.dart';
 
@@ -48,7 +49,7 @@ class FullScreenImage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _FullScreenImageState();
+    return _FullScreenImageState(photo);
   }
 }
 
@@ -56,6 +57,10 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
   AnimationController _controller;
   Animation<double> _avatarOpacity;
   Animation<double> _userInfoOpacity;
+
+  String _photo;
+
+  _FullScreenImageState(this._photo);
 
   @override
   void initState() {
@@ -152,7 +157,7 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
                     ),
                   ],
                 )),
-            Buttons()
+            Buttons(_photo)
           ],
         ));
   }
@@ -197,6 +202,10 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
 }
 
 class Buttons extends StatelessWidget {
+  final String photo;
+
+  Buttons(this.photo);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -210,50 +219,33 @@ class Buttons extends StatelessWidget {
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                          title: Text('Alert Dialog title'),
-                          content: Text('Alert dialog body'),
+                          title: Text(
+                            'Download photos',
+                            style: Theme.of(context).textTheme.headline1,
+                          ),
+                          content: Text(
+                            'Are you sure you want to download a photo?',
+                            style: Theme.of(context).textTheme.headline2,
+                          ),
                           actions: <Widget>[
                             FlatButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
+                              onPressed: () async {
+                                _saveImage(photo, () => Navigator.of(context).pop());
                               },
-                              child: Text("Ok"),
+                              child: Text("Download"),
                             ),
                             FlatButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text("Cancel"),
+                              child: Text("Close"),
                             )
                           ],
                         ));
               },
               child: Button('Save', EdgeInsets.all(12))),
           GestureDetector(
-              onTap: () async {
-                OverlayState overlayState = Overlay.of(context);
-                OverlayEntry overlayEntry = OverlayEntry(builder: (BuildContext context) {
-                  return Positioned(
-                      top: MediaQuery.of(context).viewInsets.top + 50,
-                      child: Material(
-                        color: Colors.transparent,
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width,
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 20),
-                            padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
-                            decoration:
-                                BoxDecoration(color: AppColors.mercury, borderRadius: BorderRadius.circular(10)),
-                            child: Text('SkillBranch'),
-                          ),
-                        ),
-                      ));
-                });
-                overlayState.insert(overlayEntry);
-                await Future.delayed(Duration(seconds: 1));
-                overlayEntry.remove();
-              },
+              onTap: () {},
               child: Button(
                 'Visit',
                 EdgeInsets.only(top: 12, bottom: 12),
@@ -261,6 +253,12 @@ class Buttons extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _saveImage(String photo, VoidCallback callback) async {
+    GallerySaver.saveImage(photo, albumName: 'sample_images').then((bool success) {
+      callback.call();
+    });
   }
 }
 
