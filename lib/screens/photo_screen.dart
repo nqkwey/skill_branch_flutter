@@ -1,10 +1,32 @@
 import 'package:FlutterGalleryApp/res/colors.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
+import 'package:FlutterGalleryApp/widgets/claim_bottom_sheet.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'feed_screen.dart';
+
+class FullScreenImageArguments {
+  FullScreenImageArguments(
+      {this.key,
+      this.altDescription,
+      this.userName,
+      this.name,
+      this.photo,
+      this.userPhoto,
+      this.heroTag,
+      this.routeSettings});
+
+  final Key key;
+  final String altDescription;
+  final String userName;
+  final String name;
+  final String photo;
+  final String userPhoto;
+  final String heroTag;
+  final RouteSettings routeSettings;
+}
 
 class FullScreenImage extends StatefulWidget {
   final String altDescription;
@@ -74,20 +96,7 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
       userName = "@" + widget.userName;
     }
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          elevation: 0,
-          title: const Text(
-            'Photo',
-            style: TextStyle(color: AppColors.black),
-          ),
-          backgroundColor: AppColors.white,
-          leading: IconButton(
-            icon: Icon(CupertinoIcons.back, color: AppColors.grayChateau),
-            tooltip: 'Go back',
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
+        appBar: _buildAppBar(),
         body: Column(
           children: <Widget>[
             Hero(
@@ -102,7 +111,7 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
                       vertical: 5,
                     ),
                     child: Text(widget.altDescription ?? kDescription,
-                        maxLines: 3, overflow: TextOverflow.ellipsis, style: AppStyles.h3))),
+                        maxLines: 3, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.headline3))),
             Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 10,
@@ -129,8 +138,9 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Text(widget.name ?? kName, style: AppStyles.h1Black),
-                          Text(userName, style: AppStyles.h5Black.copyWith(color: AppColors.manatee)),
+                          Text(widget.name ?? kName, style: Theme.of(context).textTheme.headline1),
+                          Text(userName,
+                              style: Theme.of(context).textTheme.headline5.copyWith(color: AppColors.manatee)),
                         ],
                       ),
                       builder: (context, child) => Container(
@@ -146,6 +156,44 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
           ],
         ));
   }
+
+  AppBar _buildAppBar() {
+    String title = ModalRoute.of(context).settings.arguments;
+    return AppBar(
+      centerTitle: true,
+      elevation: 0,
+      title: Text(
+        'Photo',
+        style: TextStyle(color: AppColors.black),
+      ),
+      actions: <Widget>[
+        IconButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: AppColors.grayChateau,
+            ),
+            onPressed: () {
+              showModalBottomSheet(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  context: context,
+                  builder: (context) {
+                    return ClaimBottomSheet(() => Navigator.of(context).pop());
+                  });
+            })
+      ],
+      backgroundColor: AppColors.white,
+      leading: IconButton(
+        icon: Icon(
+          CupertinoIcons.back,
+          color: AppColors.grayChateau,
+        ),
+        tooltip: 'Go back',
+        onPressed: () => Navigator.pop(context),
+      ),
+    );
+  }
 }
 
 class Buttons extends StatelessWidget {
@@ -157,8 +205,59 @@ class Buttons extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           LikeButton(10, true),
-          GestureDetector(onTap: () {}, child: Button('Save', EdgeInsets.all(12))),
-          GestureDetector(onTap: () {}, child: Button('Visit', EdgeInsets.only(top: 12, bottom: 12)))
+          GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Text('Alert Dialog title'),
+                          content: Text('Alert dialog body'),
+                          actions: <Widget>[
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("Ok"),
+                            ),
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("Cancel"),
+                            )
+                          ],
+                        ));
+              },
+              child: Button('Save', EdgeInsets.all(12))),
+          GestureDetector(
+              onTap: () async {
+                OverlayState overlayState = Overlay.of(context);
+                OverlayEntry overlayEntry = OverlayEntry(builder: (BuildContext context) {
+                  return Positioned(
+                      top: MediaQuery.of(context).viewInsets.top + 50,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+                            decoration:
+                                BoxDecoration(color: AppColors.mercury, borderRadius: BorderRadius.circular(10)),
+                            child: Text('SkillBranch'),
+                          ),
+                        ),
+                      ));
+                });
+                overlayState.insert(overlayEntry);
+                await Future.delayed(Duration(seconds: 1));
+                overlayEntry.remove();
+              },
+              child: Button(
+                'Visit',
+                EdgeInsets.only(top: 12, bottom: 12),
+              ))
         ],
       ),
     );
@@ -182,7 +281,7 @@ class Button extends Container {
           alignment: Alignment.center,
           child: Text(
             title,
-            style: AppStyles.h4.copyWith(color: AppColors.white),
+            style: Theme.of(context).textTheme.headline4.copyWith(color: AppColors.white),
             textAlign: TextAlign.center,
           )),
     );

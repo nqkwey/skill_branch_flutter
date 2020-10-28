@@ -29,20 +29,21 @@ class _FeedRouteState extends State<FeedRoute> {
           itemCount: 5,
           itemBuilder: (BuildContext context, int index) {
             return InkWell(
-              onTap: () =>
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            FullScreenImage(
-                              photo: kFlutterDash,
-                              altDescription: kDescription,
-                              userName: kUserName,
-                              name: kName,
-                              userPhoto: kUserPhoto,
-                              heroTag: kFlutterDash + index.toString(),
-                            )),
+              onTap: () => Navigator.pushNamed(
+                context,
+                "/fullScreenImage",
+                arguments: FullScreenImageArguments(
+                  routeSettings: RouteSettings(
+                    arguments: 'Some title',
                   ),
+                  photo: kFlutterDash,
+                  altDescription: kDescription,
+                  userName: kUserName,
+                  name: kName,
+                  userPhoto: kUserPhoto,
+                  heroTag: kFlutterDash + index.toString(),
+                ),
+              ),
               child: Column(children: <Widget>[
                 _buildItem(index),
                 Divider(
@@ -59,9 +60,7 @@ class _FeedRouteState extends State<FeedRoute> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Hero(
-            tag: kFlutterDash + index.toString(),
-            child: Photo(photoLink: kFlutterDash)),
+        Hero(tag: kFlutterDash + index.toString(), child: Photo(photoLink: kFlutterDash)),
         _buildPhotoMeta(),
         Padding(
             padding: EdgeInsets.symmetric(
@@ -109,7 +108,7 @@ class Name extends Text {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: AppStyles.h1Black);
+    return Text(text, style: Theme.of(context).textTheme.headline1);
   }
 }
 
@@ -120,7 +119,7 @@ class Nickname extends Text {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: AppStyles.h5Black.copyWith(color: AppColors.manatee));
+    return Text(text, style: Theme.of(context).textTheme.headline5.copyWith(color: AppColors.manatee));
   }
 }
 
@@ -131,6 +130,6 @@ class Description extends Text {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, maxLines: 3, overflow: TextOverflow.ellipsis, style: AppStyles.h3);
+    return Text(text, maxLines: 3, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.headline3);
   }
 }
