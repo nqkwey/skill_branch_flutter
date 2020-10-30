@@ -9,15 +9,16 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'feed_screen.dart';
 
 class FullScreenImageArguments {
-  FullScreenImageArguments(
-      {this.key,
-      this.altDescription,
-      this.userName,
-      this.name,
-      this.photo,
-      this.userPhoto,
-      this.heroTag,
-      this.routeSettings});
+  FullScreenImageArguments({
+    this.key,
+    this.altDescription,
+    this.userName,
+    this.name,
+    this.photo,
+    this.userPhoto,
+    this.heroTag,
+    this.routeSettings,
+  });
 
   final Key key;
   final String altDescription;
@@ -96,74 +97,86 @@ class _FullScreenImageState extends State<FullScreenImage> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context);
+        return false;
+      },
+      child: _buildPhotoWidget(),
+    );
+  }
+
+  Scaffold _buildPhotoWidget() {
     String userName = widget.userName ?? kUserName;
     if (!userName.startsWith("@")) {
       userName = "@" + widget.userName;
     }
     return Scaffold(
         appBar: _buildAppBar(),
-        body: Column(
-          children: <Widget>[
-            Hero(
-              tag: widget.heroTag,
-              child: Photo(photoLink: widget.photo),
-            ),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    child: Text(widget.altDescription ?? kDescription,
-                        maxLines: 3, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.headline3))),
-            Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
-                child: Row(
-                  children: <Widget>[
-                    AnimatedBuilder(
-                      animation: _controller,
-                      child: UserAvatar(widget.userPhoto),
-                      builder: (context, child) => Container(
-                        child: Opacity(
-                          opacity: _avatarOpacity.value.toDouble(),
-                          child: child,
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Hero(
+                tag: widget.heroTag,
+                child: PhotoWidget(photoLink: widget.photo),
+              ),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      child: Text(widget.altDescription ?? kDescription,
+                          maxLines: 3, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.headline3))),
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      AnimatedBuilder(
+                        animation: _controller,
+                        child: UserAvatar(widget.userPhoto),
+                        builder: (context, child) => Container(
+                          child: Opacity(
+                            opacity: _avatarOpacity.value.toDouble(),
+                            child: child,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    AnimatedBuilder(
-                      animation: _controller,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text(widget.name ?? kName, style: Theme.of(context).textTheme.headline1),
-                          Text(userName,
-                              style: Theme.of(context).textTheme.headline5.copyWith(color: AppColors.manatee)),
-                        ],
+                      SizedBox(
+                        width: 6,
                       ),
-                      builder: (context, child) => Container(
-                        child: Opacity(
-                          opacity: _userInfoOpacity.value.toDouble(),
-                          child: child,
+                      AnimatedBuilder(
+                        animation: _controller,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Text(widget.name ?? kName, style: Theme.of(context).textTheme.headline1),
+                            Text(userName,
+                                style: Theme.of(context).textTheme.headline5.copyWith(color: AppColors.manatee)),
+                          ],
+                        ),
+                        builder: (context, child) => Container(
+                          child: Opacity(
+                            opacity: _userInfoOpacity.value.toDouble(),
+                            child: child,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                )),
-            Buttons(_photo)
-          ],
-        ));
+                    ],
+                  )),
+              Buttons(_photo)
+            ],
+          ),
+        ),
+    );
   }
 
   AppBar _buildAppBar() {
-    String title = ModalRoute.of(context).settings.arguments;
     return AppBar(
       centerTitle: true,
       elevation: 0,

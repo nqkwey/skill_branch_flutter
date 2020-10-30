@@ -31,7 +31,7 @@ void main() {
     );
 
     expect(topModalBarrier.tag, 'tag');
-    expect(true, topModalBarrier.child.runtimeType == Photo);
+    expect(true, topModalBarrier.child.runtimeType == PhotoWidget);
   });
 
   testWidgets('AnimatedBuilder', (WidgetTester tester) async {

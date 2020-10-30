@@ -1,4 +1,6 @@
+import 'package:FlutterGalleryApp/res/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class UserAvatar extends StatelessWidget {

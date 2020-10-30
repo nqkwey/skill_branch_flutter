@@ -1,3 +1,5 @@
+import 'package:FlutterGalleryApp/data/data_api.dart';
+import 'package:FlutterGalleryApp/models/photo_list/model.dart';
 import 'package:FlutterGalleryApp/res/colors.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/screens/photo_screen.dart';
@@ -22,11 +24,28 @@ class FeedRoute extends StatefulWidget {
 }
 
 class _FeedRouteState extends State<FeedRoute> {
+  ScrollController _scrollController = ScrollController();
+  int pageCount = 0;
+  bool isLoading = false;
+  var data = List<Photo>();
+
+  @override
+  void initState() {
+    super.initState();
+    this._getData(pageCount);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
+        _getData(pageCount);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView.builder(
-          itemCount: 5,
+          itemCount: data.length,
+          controller: _scrollController,
           itemBuilder: (BuildContext context, int index) {
             return InkWell(
               onTap: () => Navigator.pushNamed(
@@ -36,16 +55,16 @@ class _FeedRouteState extends State<FeedRoute> {
                   routeSettings: RouteSettings(
                     arguments: 'Some title',
                   ),
-                  photo: kFlutterDash,
-                  altDescription: kDescription,
-                  userName: kUserName,
-                  name: kName,
-                  userPhoto: kUserPhoto,
-                  heroTag: kFlutterDash + index.toString(),
+                  photo: data[index].urls.regular,
+                  altDescription: data[index].altDescription,
+                  userName: data[index].user.username,
+                  name: data[index].user.name,
+                  userPhoto: data[index].user.profileImage.medium,
+                  heroTag: data[index].urls.regular,
                 ),
               ),
               child: Column(children: <Widget>[
-                _buildItem(index),
+                _buildItem(data[index]),
                 Divider(
                   thickness: 2,
                   color: AppColors.mercury,
@@ -56,23 +75,26 @@ class _FeedRouteState extends State<FeedRoute> {
     );
   }
 
-  Widget _buildItem(int index) {
+  Widget _buildItem(Photo photo) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Hero(tag: kFlutterDash + index.toString(), child: Photo(photoLink: kFlutterDash)),
-        _buildPhotoMeta(),
+        Hero(
+          tag: photo.urls.regular,
+          child: PhotoWidget(photoLink: photo.urls.regular),
+        ),
+        _buildPhotoMeta(photo),
         Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 10,
               vertical: 5,
             ),
-            child: Description(kDescription))
+            child: Description(photo.altDescription))
       ],
     );
   }
 
-  Widget _buildPhotoMeta() {
+  Widget _buildPhotoMeta(Photo photo) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Row(
@@ -80,7 +102,7 @@ class _FeedRouteState extends State<FeedRoute> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              UserAvatar(kUserPhoto),
+              UserAvatar(photo.user.profileImage.medium),
               SizedBox(
                 width: 6,
               ),
@@ -88,23 +110,38 @@ class _FeedRouteState extends State<FeedRoute> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Name(kName),
-                  Nickname(kUserName),
+                  Name(photo.user.name),
+                  Nickname(photo.user.username),
                 ],
               )
             ],
           ),
-          LikeButton(10, true),
+          LikeButton(10, photo.likedByUser),
         ],
       ),
     );
+  }
+
+  void _getData(int page) async {
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+      });
+      var tempList = await DataProvider.getPhotos(page, 10);
+
+      setState(() {
+        isLoading = false;
+        data.addAll(tempList.photos);
+        pageCount++;
+      });
+    }
   }
 }
 
 class Name extends Text {
   final String text;
 
-  Name(this.text) : super(text);
+  Name(this.text) : super(text == null ? "" : text);
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +152,7 @@ class Name extends Text {
 class Nickname extends Text {
   final String text;
 
-  Nickname(this.text) : super(text);
+  Nickname(this.text) : super(text == null ? "" : text);
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +163,7 @@ class Nickname extends Text {
 class Description extends Text {
   final String text;
 
-  Description(this.text) : super(text);
+  Description(this.text) : super(text == null ? "" : text);
 
   @override
   Widget build(BuildContext context) {
